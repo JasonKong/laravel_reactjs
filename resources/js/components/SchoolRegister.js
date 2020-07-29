@@ -5,6 +5,7 @@ import SchoolInformation from './partial/SchoolInformation';
 import PaymentInformation from './partial/PaymentInformation';
 import AccountInformation from './partial/AccountInformation';
 import UploadFiles from './partial/UploadFiles';
+import RegisterCompleted from './partial/RegisterCompleted';
 
 class SchoolRegister extends React.Component {
     constructor(props) {
@@ -123,17 +124,15 @@ class SchoolRegister extends React.Component {
                     console.log(result);
                     if (result.data.errors) {
                         this.setState({
-                            isLoaded: true,
                             errors: result.data.errors
                         });
                     } else {
 
+                        this.setState({
+                            currentStep : 5
+                        });
                     }
 
-                    this.setState({
-                        isLoaded: true,
-                        items: result.items
-                    });
                 },
                 // Note: it's important to handle errors here
                 // instead of a catch() block so that we don't swallow
@@ -161,7 +160,7 @@ class SchoolRegister extends React.Component {
 
     get previousButton(){
         let currentStep = this.state.currentStep;
-        if(currentStep !==1){
+        if(currentStep !==1 && currentStep <=4){
             return (
                 <input type="button"
                        name="previous"
@@ -207,7 +206,9 @@ class SchoolRegister extends React.Component {
                     <div className="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
                         <div className="card px-0 pt-4 pb-0 mt-3 mb-3">
                             <h1>School Register Form</h1>
-                            <p>Step {this.state.currentStep} </p>
+                            {this.state.currentStep <= 4 && (
+                            <p>Step {this.state.currentStep} </p>)
+                            }
                             <form onSubmit={(e) => this.handleSubmit(e)} id="school-register-form">
                                 <SchoolInformation
                                     currentStep={this.state.currentStep}
@@ -230,6 +231,7 @@ class SchoolRegister extends React.Component {
                                     handleChange={this.handleChangeForAccount}
                                     user={this.state.user}
                                 />
+                                <RegisterCompleted currentStep={this.state.currentStep}/>
                                 {this.previousButton}
                                 {this.nextButton}
                                 {this.state.currentStep === 4 && (
